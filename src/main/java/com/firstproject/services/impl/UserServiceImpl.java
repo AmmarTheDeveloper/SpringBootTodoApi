@@ -12,6 +12,7 @@ import org.springframework.web.server.ResponseStatusException;
 import com.firstproject.dto.ResponseDto;
 import com.firstproject.dto.UserDto;
 import com.firstproject.dto.UserLoginDto;
+import com.firstproject.dto.UserRegisterDto;
 import com.firstproject.dto.UserResponseDto;
 import com.firstproject.entities.User;
 import com.firstproject.enums.Status;
@@ -41,13 +42,19 @@ public class UserServiceImpl implements UserService {
 	}
 	
 	@Override
-	public ResponseEntity<UserResponseDto> registerUser(User u) {
+	public ResponseEntity<UserResponseDto> registerUser(UserRegisterDto u) {
 		
 		User existingUser = this.userRepo.findByEmail(u.getEmail());
 		
 		if(existingUser != null) throw new ResponseStatusException(HttpStatus.CONFLICT,"User already exist");
-		
-		User user = this.userRepo.save(u);
+				
+		User user = this.userRepo.save(
+				User.builder()
+				.name(u.getName())
+				.email(u.getEmail())
+				.password(u.getPassword())
+				.build()
+		);
 		
 		return ResponseEntity.ok(new UserResponseDto(Status.SUCCESS, "Registered successfully", user));
 	}

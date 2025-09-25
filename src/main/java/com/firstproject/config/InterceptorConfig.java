@@ -21,10 +21,25 @@ public class InterceptorConfig implements WebMvcConfigurer {
 	public void addInterceptors(InterceptorRegistry registry) {
 		
 		//interceptor for Authorized pages so that only logged in user's can access those pages
-		registry.addInterceptor(authInterceptor).addPathPatterns("/**").excludePathPatterns("/user/login","/user/register");
+		registry.addInterceptor(authInterceptor).addPathPatterns("/**")
+		.excludePathPatterns(
+				"/user/login",
+				"/user/register",
+				//only when swagger
+                "/swagger-ui.html",
+                "/swagger-ui/**",
+                "/v3/api-docs/**",
+                "/v3/api-docs",
+                "/api-docs/**",        // if you changed the default path in properties
+                "/webjars/**"
+				);
 		
 		//interceptor for login & register page so that only logged out user's can access these pages
-		registry.addInterceptor(loggedOutUsersOnlyInterceptor).addPathPatterns("/user/login","/user/register");
+		registry.addInterceptor(loggedOutUsersOnlyInterceptor)
+		.addPathPatterns(
+				"/user/login",
+				"/user/register"
+			);
 	}
 
 }
